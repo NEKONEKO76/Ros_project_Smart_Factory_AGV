@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/armpi_pro/devel
+
+Name: intelligent_grasp
+Description: Description of intelligent_grasp
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

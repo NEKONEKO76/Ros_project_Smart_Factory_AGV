@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/armpi_pro/devel
+
+Name: chassis_tracking
+Description: Description of chassis_tracking
+Version: 0.0.0
+Cflags: -I/home/ubuntu/armpi_pro/devel/include
+Libs: -L${prefix}/lib 
+Requires: std_msgs std_srvs

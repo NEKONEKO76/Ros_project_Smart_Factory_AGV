@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/armpi_pro/install
+
+Name: hiwonder_servo_msgs
+Description: Description of hiwonder_servo_msgs
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime std_msgs actionlib_msgs

@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/armpi_pro/devel
+
+Name: hiwonder_servo_controllers
+Description: Description of hiwonder_servo_controllers
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: rospy actionlib std_msgs trajectory_msgs diagnostic_msgs hiwonder_servo_msgs hiwonder_servo_driver control_msgs

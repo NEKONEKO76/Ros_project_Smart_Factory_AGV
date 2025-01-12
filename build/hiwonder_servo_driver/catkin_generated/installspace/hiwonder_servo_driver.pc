@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/armpi_pro/install
+
+Name: hiwonder_servo_driver
+Description: Description of hiwonder_servo_driver
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: diagnostic_msgs rospy std_msgs

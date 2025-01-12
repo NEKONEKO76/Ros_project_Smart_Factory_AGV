@@ -1,0 +1,2 @@
+apriltag_detect:armpi_pro_bringup:chassis_control:color_tracking:face_detect:hiwonder_servo_controllers:hiwonder_servo_driver:hiwonder_servo_msgs:intelligent_grasp:intelligent_palletizer:intelligent_transport:lab_config:object_tracking:sensor:visual_patrol:visual_processing
+-DCATKIN_DEVEL_PREFIX=/home/ubuntu/armpi_pro/devel -DCMAKE_INSTALL_PREFIX=/home/ubuntu/armpi_pro/install -G Unix Makefiles

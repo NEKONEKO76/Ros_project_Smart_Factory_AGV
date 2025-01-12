@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/armpi_pro/devel
+
+Name: sensor
+Description: Description of sensor
+Version: 0.0.0
+Cflags: -I/home/ubuntu/armpi_pro/devel/include
+Libs: -L${prefix}/lib 
+Requires: rospy std_msgs

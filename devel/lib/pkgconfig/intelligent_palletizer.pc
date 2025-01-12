@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/armpi_pro/devel
+
+Name: intelligent_palletizer
+Description: Description of intelligent_palletizer
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

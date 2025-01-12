@@ -1,0 +1,2 @@
+set(hiwonder_servo_msgs_MESSAGE_FILES "msg/JointState.msg;msg/ServoState.msg;msg/ServoStateList.msg;msg/CommandDuration.msg;msg/CommandDurationList.msg;msg/RawIdPosDur.msg;msg/MultiRawIdPosDur.msg;msg/ActionGroupRunnerAction.msg;msg/ActionGroupRunnerActionGoal.msg;msg/ActionGroupRunnerActionResult.msg;msg/ActionGroupRunnerActionFeedback.msg;msg/ActionGroupRunnerGoal.msg;msg/ActionGroupRunnerResult.msg;msg/ActionGroupRunnerFeedback.msg")
+set(hiwonder_servo_msgs_SERVICE_FILES "")

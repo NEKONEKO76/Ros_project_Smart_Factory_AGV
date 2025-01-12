@@ -1,0 +1,5 @@
+string type
+string color
+---
+bool success
+string message
