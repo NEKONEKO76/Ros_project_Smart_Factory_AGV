@@ -22,12 +22,13 @@ from chassis_control.msg import SetTranslation, SetVelocity
 from armpi_pro import PID
 from armpi_pro import Misc  # 用于处理识别到的矩形数据
 from armpi_pro import bus_servo_control
-from kinematics import ik_transform  # 用于逆运动学变换
+from kinematics import ik_transform  # 用于逆运动学变换，自己写的
 
 # 智能码垛
 
 lock = RLock()
-ik = ik_transform.ArmIK()
+
+ik = ik_transform.ArmIK() # 创立一个实例用于计算机械臂的configuration
 
 x_dis = 500
 y_dis = 0.15
@@ -127,39 +128,50 @@ def move():
                    2:(0.18, 0.0, -0.05),
                    3:(0.18, 0.0, -0.02)}
     while __isRunning:
+        # 确保物体已经稳定，并且检测到了目标的中心坐标（object_center_x, object_center_y）
+        # steadier 由 run(msg) 计算得出，表示目标是否稳定
         if steadier and object_center_x > 0 and object_center_y > 0: 
             # 木块已经放稳，进行追踪夹取
+            # 计算目标中心与图像中心(centreX, centreY)的偏差diff_x, diff_y,用于 PID 控制调整机械臂位置。
             diff_x = abs(object_center_x - centreX)
             diff_y = abs(object_center_y - centreY)
             # X轴PID追踪
+            # 如果偏差小于10个像素，则PID目标设为目标中心object_center_x
             if diff_x < 10:
-                x_pid.SetPoint = object_center_x  # 设定
+                x_pid.SetPoint = object_center_x
+            # 否则设为中心点 centreX，强制机械臂校正方向
             else:
                 x_pid.SetPoint = centreX
-                
+
+            # 计算 PID 输出的修正量 dx，并 更新机械臂的 X 位置。
+            # 限制 x_dis 不能低于 200 或高于 800，避免超出机械臂工作范围。
             x_pid.update(object_center_x) # 当前
             dx = x_pid.output             # 输出
             x_dis += int(dx)     
             x_dis = 200 if x_dis < 200 else x_dis
             x_dis = 800 if x_dis > 800 else x_dis
+
             # Y轴PID追踪
             if diff_y < 10:
                 y_pid.SetPoint = object_center_y  # 设定
             else:
                 y_pid.SetPoint = centreY
-                
+
+            # 与 X 轴 PID 逻辑类似，控制 Y 轴方向（左右方向）的精确调整。
+            # 限制 Y 轴的可移动范围 0.12 ~ 0.28，确保机械臂不会超出允许范围。
             y_pid.update(object_center_y) # 当前
             dy = y_pid.output             # 输出
             y_dis += dy  
             y_dis = 0.12 if y_dis < 0.12 else y_dis
             y_dis = 0.28 if y_dis > 0.28 else y_dis
             
-            
+            # 启动时使用较慢的移动速度 move_time=500ms，后续调整时使用 20ms 的快速微调
             if start_en:
                 start_en = False
                 move_time = 500
             else:
                 move_time = 20
+
             # 机械臂追踪移动到木块上方
             target = ik.setPitchRanges((0, round(y_dis, 4), 0.0), -180, -180, 0)
             if target:

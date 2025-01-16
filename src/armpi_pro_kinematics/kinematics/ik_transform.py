@@ -4,6 +4,7 @@
 import time
 import numpy as np
 from math import sqrt
+
 if __name__ == "__main__":
     import inverse_kinematics
 else:
