@@ -217,7 +217,7 @@ def move():
                 bus_servo_control.set_servos(joints_pub, 500, ((1, 150),))  #张开机械爪
                 rospy.sleep(0.8)
                 
-                if stack_num >= 3: # 码垛计量大于等于3，进行重置
+                if stack_num >= 1: # 码垛计量大于等于3，进行重置
                     stack_num = 0
                     
                 #机械臂复位
@@ -257,6 +257,7 @@ def run(msg):
     global object_center_y   
 
     # 获得图像处理结果
+    
     object_center_x = msg.center_x  # 目标中心X坐标
     object_center_y = msg.center_y  # 目标中心Y坐标
     object_angle = msg.angle        # 目标旋转角

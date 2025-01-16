@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="16158cb6-5cbe-4ade-9391-2ba02a4e8bc8" name="rosAGV">
+        <fileTransfer accessType="SFTP" host="192.168.149.1" port="22" sshConfigId="730e27a1-a283-4cdb-af70-70145ec8acbe" sshConfig="ubuntu@192.168.149.1:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

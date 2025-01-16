@@ -100,30 +100,35 @@ def face_detect(img):
 
 
 # 检测apriltag函数
+# 这里返回的是原图中的坐标，并不是机器人坐标系中的坐标
 detector = apriltag.Detector(searchpath=apriltag._get_demo_searchpath())
 def apriltag_Detect(img):
-    global pub_time
-    global publish_en
-    global id_smallest
+    global pub_time # 上次结果的发布时间
+    global publish_en # 是否允许发布检测结果
+    global id_smallest # 最小的apriltag标签
     
-    msg = Result()
-    img_copy = img.copy()
-    img_h, img_w = img.shape[:2]
-    frame_resize = cv2.resize(img_copy, size_m, interpolation=cv2.INTER_NEAREST)
-    gray = cv2.cvtColor(frame_resize, cv2.COLOR_BGR2GRAY)
-    detections = detector.detect(gray, return_image=False)
+    msg = Result() # 创建一个对象，用于储存要publish的信息
+    img_copy = img.copy() # 复制输入图像，避免对原始图像进行修改。
+    img_h, img_w = img.shape[:2] # 获取图像的高度 img_h 和宽度 img_w。
+    frame_resize = cv2.resize(img_copy, size_m, interpolation=cv2.INTER_NEAREST)  # 将图像 img_copy 缩放到 size_m 尺寸，使用 INTER_NEAREST 进行最近邻插值。
+
+    gray = cv2.cvtColor(frame_resize, cv2.COLOR_BGR2GRAY) # 将缩放后的图像 frame_resize 转换为灰度图 gray，以便进行 AprilTag 检测
+    detections = detector.detect(gray, return_image=False) # 使用 detector 对灰度图 gray 进行 AprilTag 检测，返回检测结果。
     
-    if len(detections) != 0:
-        for i, detection in enumerate(detections):
+    if len(detections) != 0: # 判断是否有检测到 AprilTag。
+        for i, detection in enumerate(detections): # 遍历检测到的所有 AprilTag，i 是索引，detection 是检测到的每个 AprilTag 的详细信息。
             tag_id = int(detection.tag_id)        # 获取tag_id
             corners = np.rint(detection.corners)  # 获取四个角点
-            for i in range(4):
+            for i in range(4):  # 将调整大小后的角点坐标映射回原始图像的坐标系。
                 corners[i][0] = int(Misc.map(corners[i][0], 0, size_m[0], 0, img_w))
                 corners[i][1] = int(Misc.map(corners[i][1], 0, size_m[1], 0, img_h))
-            cv2.drawContours(img, [np.array(corners, np.int)], -1, (0, 255, 255), 2)
-            object_center_x = int(Misc.map(detection.center[0], 0, size_m[0], 0, img_w))
-            object_center_y = int(Misc.map(detection.center[1], 0, size_m[1], 0, img_h))  # 中心点            
+
+            cv2.drawContours(img, [np.array(corners, np.int)], -1, (0, 255, 255), 2) # 在原图 img 上用黄色线条绘制出 AprilTag 的轮廓。
+            object_center_x = int(Misc.map(detection.center[0], 0, size_m[0], 0, img_w))  # 中心点x
+            object_center_y = int(Misc.map(detection.center[1], 0, size_m[1], 0, img_h))  # 中心点y
             object_angle = int(math.degrees(math.atan2(corners[0][1] - corners[1][1], corners[0][0] - corners[1][0])))  # 计算旋转角
+
+            # 在图像中心点附近显示标签ID
             cv2.putText(img, str(tag_id), (object_center_x - 10, object_center_y + 10), cv2.FONT_HERSHEY_SIMPLEX, 1, [0, 255, 255], 2)
             if id_smallest == 'None' or tag_id <= id_smallest:
                 id_smallest = tag_id        

@@ -25,14 +25,16 @@ from armpi_pro import Misc
 from armpi_pro import bus_servo_control
 from kinematics import ik_transform
 
-# 自主搬运
+# 调整了检测偏移
+# 改变了检测逻辑 colors ==>> apriltage
+#
 
 lock = RLock()
 ik = ik_transform.ArmIK()
 
 set_visual = 'line'   
 detect_step = 'color' # 步骤：巡线或者检测色块
-line_color = 'yellow' # 巡线颜色
+line_color = 'red' # 巡线颜色
 stable = False        # 色块夹取判断变量
 place_en = False      # 色块放置判断变量
 position_en = False   # 色块夹取前定位判断变量
@@ -159,7 +161,9 @@ def run(msg):
             data = 0 if data < 0 else data
             data = 0 if data > 3 else data
             detect_color = color_list[data]
+
             rospy.loginfo(f"x = {color_center_x}")
+            rospy.loginfo(f"y = {color_center_y}")
             if not position_en: # 判断色块是否放稳
                 dx = abs(color_center_x - last_x)
                 dy = abs(color_center_y - last_y)
@@ -282,7 +286,9 @@ def move():
                 y_dis = 0.15
                 stable = False
                 set_visual = 'color'
-                visual_running('colors', 'rgb') # 切换图像处理类型
+                ##############################################################################
+                visual_running('apriltag', '') # 切换图像处理类型
+                #############################################################################3
                 # 切换机械臂姿态
                 target = ik.setPitchRanges((0, 0.15, 0.03), -180, -180, 0)
                 if target:
@@ -339,7 +345,7 @@ def move():
                         
                         bus_servo_control.set_servos(joints_pub, 500, ((1, 120),)) #张开机械爪
                         rospy.sleep(0.5)
-                        target = ik.setPitchRanges((0, round(y_dis + offset_y, 5), -0.07), -180, -180, 0) #机械臂向下伸
+                        target = ik.setPitchRanges((0, round(y_dis + offset_y, 5), -0.08), -180, -180, 0) #机械臂向下伸
                         if target:
                             servo_data = target[1]
                             bus_servo_control.set_servos(joints_pub, 1000, ((3, servo_data['servo3']),
